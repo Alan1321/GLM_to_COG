@@ -1,11 +1,13 @@
-from lmatools.grid.fixed import get_GOESR_coordsys
+# from lmatools.grid.fixed import get_GOESR_coordsys
 import math
 import xarray as xr
 import numpy as np
 import random
 
 def load_file(infile_location):
-    return xr.open_dataset(infile_location, engine="netcdf4", decode_coords='all', decode_times=False)
+    file = xr.open_dataset(infile_location, engine="netcdf4", decode_coords='all', decode_times=False)
+    print(file.rio)
+    return file
 
 def trim_data(lat, lon, data):
     """
@@ -51,6 +53,7 @@ def new_xrDataset(lat, lon, data, data_var, instrument_name):
         coords={"lon": lon, "lat": lat},
         attrs={"instrument_name": instrument_name}
     )
+    print(file.rio)
     return file
 
 def to_netcdf(file, variable_name, outfile_location, total):
@@ -62,7 +65,7 @@ def to_netcdf(file, variable_name, outfile_location, total):
     outfile_name = f"new_netcdf4_{random_number_generator(total)}.nc"
     outfile_location = outfile_location + '/' + outfile_name
     file.to_netcdf(outfile_location)
-    print(f"New netcdf4 file {outfile_name} has been generated. Path: {outfile_location}")
+    print(f"--> New netcdf4 file {outfile_name} has been generated. Path: {outfile_location}")
 
 def to_geotiff(file, variable_name, outfile_location, total):
     """
@@ -72,12 +75,17 @@ def to_geotiff(file, variable_name, outfile_location, total):
         infile_location (string): Location of the netcdf file
         variable_name (string): Variable name in the file to be converted
     """
-    file = file(variable_name)
-    file = conversion(file)
+    file = file[variable_name]
+
+    file = file.transpose("lat", "lon") 
+    file.rio.set_spatial_dims(x_dim='lon', y_dim='lat', inplace=True)
+    file.rio.crs
+    file.rio.set_crs('epsg:4326', inplace=True)
+
     outfile_name = f"S2A_20160724_135032_27XVB_B{random_number_generator(total)}.tif"
     outfile_location = outfile_location + '/' + outfile_name
     file.rio.to_raster(rf'{outfile_location}', driver="COG")
-    print(f"New geotiff file {outfile_name} has been generated. Path: {outfile_location}")
+    print(f"--> New geotiff file {outfile_name} has been generated. Path: {outfile_location}")
 
 def conversion(file, transpose=True):
     """

@@ -8,14 +8,20 @@ total_random_number = 5
 variable_name = "Flash_extent_density"
 
 #for new xarray formation
-data_variable_name = "Flash Extent Density"
+data_variable_name = "Flash_extent_density"
 instrument_name = "GLM-3"
 
 def start():
     file = load_file(infile_location)
+    print("--> File Loaded")
     lat, lon = xy_to_latlon_main(file.x, file.y, file)
-    lat, lon, data = trim_data(lat, lon, file.data)
+    print("--> lat, lon conversion complete")
+    lat, lon, data = trim_data(lat, lon, file[variable_name].data)
+    print("--> Data Trimmed")
     file2 = new_xrDataset(lat, lon, data, data_variable_name, instrument_name)
+    print("-->")
+    print(file2)
+    print("--> New file created")
     to_geotiff(file2, variable_name, outfile_location, total_random_number)
     to_netcdf(file2, variable_name, outfile_location, total_random_number)
 
