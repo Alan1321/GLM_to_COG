@@ -1,28 +1,7 @@
 from lmatools.grid.fixed import get_GOESR_coordsys
-from curses import flash
-import os
-from pickle import TRUE
-from re import L
-# import requests
-# import validators
-# import gzip
-# import shutil
-# from urllib.parse import urlparse
-
-#import sys
 import math
 import xarray as xr
 import numpy as np
-# from rio_cogeo import cog_validate
-# import rioxarray
-
-# Mapping
-# import matplotlib as mpl
-# from matplotlib import pyplot as plt
-# import cartopy.crs as ccrs
-# import cartopy.feature as cfeature
-# from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-# import matplotlib.ticker as mticker
 
 file_location1 = "/home/asubedi/Desktop/data/raw-files/GLM/OR_GLM-L3-GLMF-M6_G16_s202315823490000_e202315823500000_c20231582351080.nc"
 variable1 = "Flash_extent_density"
