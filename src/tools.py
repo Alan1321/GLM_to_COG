@@ -107,6 +107,6 @@ def random_number_generator(total):
         string: Random number
     """
     digit = ""
-    for t in total:
+    for t in range(total):
         digit += str(random.randint(0,9))
     return digit
